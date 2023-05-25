@@ -22,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FileUtilImplTest {
@@ -91,33 +90,26 @@ class FileUtilImplTest {
 
   @Test
   void shouldReturnEmptySetIfFileDoesNotExist() {
-    // Given
     FileUtilImpl fileUtil = new FileUtilImpl(tempDir.resolve("not_existing_file.txt").toString());
 
-    // When
     Set<Reservation> result = fileUtil.readFromFile();
 
-    // Then
     assertTrue(result.isEmpty());
   }
 
   @Test
   void shouldReturnEmptySetIfFileExistsButIsNotASet() throws IOException {
-    // Given
     try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempFile))) {
       oos.writeObject("Not a set");
     }
 
-    // When
     Set<Reservation> result = fileUtil.readFromFile();
 
-    // Then
     assertTrue(result.isEmpty());
   }
 
   @Test
   void shouldReturnEmptySetIfFileExistsButNotAllObjectsAreReservations() throws IOException {
-    // Given
     Set<Object> mixedSet = new HashSet<>();
     mixedSet.add(reservation);
     mixedSet.add("Not a reservation object");
@@ -126,16 +118,13 @@ class FileUtilImplTest {
       oos.writeObject(mixedSet);
     }
 
-    // When
     Set<Reservation> result = fileUtil.readFromFile();
 
-    // Then
     assertTrue(result.isEmpty());
   }
 
   @Test
   void shouldReturnReservationSetIfFileExistsAndAllObjectsAreReservations() throws IOException {
-    // Given
     Set<Reservation> reservationSet = new HashSet<>();
     reservationSet.add(reservation);
 
@@ -143,10 +132,8 @@ class FileUtilImplTest {
       oos.writeObject(reservationSet);
     }
 
-    // When
     Set<Reservation> result = fileUtil.readFromFile();
 
-    // Then
     assertFalse(result.isEmpty());
     assertEquals(reservationSet.size(), result.size());
     assertTrue(result.contains(reservation));
